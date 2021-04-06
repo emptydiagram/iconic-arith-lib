@@ -1,3 +1,7 @@
+export function hello(): string {
+  return "hello, world";
+}
+
 export enum JamesAlgebraContainer {
   Round = "Round",
   Square = "Square",

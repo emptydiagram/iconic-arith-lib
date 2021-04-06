@@ -4,12 +4,31 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "ava",
     "build": "tsc"
   },
   "author": "",
   "license": "(0BSD or Apache-2.0)",
   "devDependencies": {
+    "@ava/typescript": "^1.1.1",
+    "ava": "^3.15.0",
     "typescript": "^4.2.3"
+  },
+  "dependencies": {
+    "esm": "^3.2.25"
+  },
+  "ava": {
+    "require": [
+      "esm"
+    ],
+    "typescript": {
+      "extensions": [
+        "ts",
+        "tsx"
+      ],
+      "rewritePaths": {
+        "src/": "build/"
+      }
+    }
   }
 }
