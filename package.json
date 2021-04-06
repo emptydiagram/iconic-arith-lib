@@ -2,7 +2,8 @@
   "name": "iconic-arith-lib",
   "version": "0.1.0-0",
   "description": "",
-  "main": "index.js",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "test": "ava",
     "build": "tsc"
@@ -27,7 +28,7 @@
         "tsx"
       ],
       "rewritePaths": {
-        "src/": "build/"
+        "src/": "lib/"
       }
     }
   }
