@@ -52,51 +52,51 @@ function unit() {
 }
 
 
-test('it parses void', t => {
+test('it parses void', (t: any) => {
   let v = makeVoidForm();
   t.deepEqual(JamesAlgebraParser.parse(""), v);
   t.deepEqual(JamesAlgebraParser.parse(" "), v);
   t.deepEqual(JamesAlgebraParser.parse("  "), v);
   t.deepEqual(JamesAlgebraParser.parse("   "), v);
 });
-test('it parses ()  : 1', t => {
+test('it parses ()  : 1', (t: any) => {
   const parse = JamesAlgebraParser.parse("()");
   let unwrap = unwrapSingletonForm(parse);
   t.deepEqual(unwrap, makeUnitForm());
 });
-test('it parses [] : negative infinity', t => {
+test('it parses [] : negative infinity', (t: any) => {
   const parse = JamesAlgebraParser.parse("[]");
   let unwrap = unwrapSingletonForm(parse);
   t.deepEqual(unwrap, makeSquareForm());
 });
-test('it parses <> : -0', t => {
+test('it parses <> : -0', (t: any) => {
   const parse = JamesAlgebraParser.parse("<>");
   let unwrap = unwrapSingletonForm(parse);
   t.deepEqual(unwrap, makeDiamondForm());
 });
-test('it parses (()) : #, a generic, unknown base', t => {
+test('it parses (()) : #, a generic, unknown base', (t: any) => {
   const parse = JamesAlgebraParser.parse("(())");
   let unwrap = unwrapSingletonForm(parse);
   t.deepEqual(unwrap, makeRoundContainerForm([makeUnitForm()]));
 });
-test('it parses [()] : log 1', t => {
+test('it parses [()] : log 1', (t: any) => {
   const parse = JamesAlgebraParser.parse("[()]");
   let unwrap = unwrapSingletonForm(parse);
   t.deepEqual(unwrap, makeSquareContainerForm([makeUnitForm()]));
 });
-test('it parses ([]) : #^{-inf}', t => {
+test('it parses ([]) : #^{-inf}', (t: any) => {
   const parse = JamesAlgebraParser.parse("([])");
   let unwrap = unwrapSingletonForm(parse);
   t.deepEqual(unwrap, makeRoundContainerForm([makeSquareForm()]));
 });
-test('it parses ()() : 2', t => {
+test('it parses ()() : 2', (t: any) => {
   const parse = JamesAlgebraParser.parse("()()");
   t.is(parse.formType, "container");
   const parsedContainer = parse as JamesAlgebraContainerForm;
   t.is(parsedContainer.children.length, 2);
   t.deepEqual(parsedContainer, makeImplicitContainerForm([makeUnitForm(), makeUnitForm()]));
 });
-test('it parses () <()> : 1 + -1', t => {
+test('it parses () <()> : 1 + -1', (t: any) => {
   const parse = JamesAlgebraParser.parse("() <()>");
   t.is(parse.formType, "container");
   const parsedContainer = parse as JamesAlgebraContainerForm;
@@ -106,17 +106,17 @@ test('it parses () <()> : 1 + -1', t => {
     makeAngleContainerForm([makeUnitForm()])
   ]));
 });
-test('it parses [<()>] : log(-1)', t => {
+test('it parses [<()>] : log(-1)', (t: any) => {
   const parse = JamesAlgebraParser.parse("[<()>]");
   let unwrap = unwrapSingletonForm(parse);
   t.deepEqual(unwrap, makeJForm());
 });
-test('it parses (<[]>) : 1/0', t => {
+test('it parses (<[]>) : 1/0', (t: any) => {
   const parse = JamesAlgebraParser.parse("(<[]>)");
   let unwrap = unwrapSingletonForm(parse);
   t.deepEqual(unwrap, makeDivByZeroForm());
 });
-test('it parses whole numbers', t => {
+test('it parses whole numbers', (t: any) => {
   let parse1 = JamesAlgebraParser.parse(" (     )  ");
   let parse2 = JamesAlgebraParser.parse("( ) ()  ");
   let parse3 = JamesAlgebraParser.parse("   ( ) (    )()");
@@ -126,7 +126,7 @@ test('it parses whole numbers', t => {
   t.deepEqual(parse3, makeCountingNumberForm(3));
   t.deepEqual(parse4, makeCountingNumberForm(4));
 });
-test('it parses (<[() ()]>) : 1/2', t => {
+test('it parses (<[() ()]>) : 1/2', (t: any) => {
   const parse = JamesAlgebraParser.parse("(<[() ()]>)");
   let unwrap = unwrapSingletonForm(parse);
   t.deepEqual(unwrap, makeRoundContainerForm([
@@ -138,7 +138,7 @@ test('it parses (<[() ()]>) : 1/2', t => {
     ])
   ]));
 });
-test("it parses all o's", t => {
+test("it parses all o's", (t: any) => {
   let parse1 = JamesAlgebraParser.parse("o");
   let parse2 = JamesAlgebraParser.parse(" oo");
   let parse3 = JamesAlgebraParser.parse("o  oo ");
@@ -150,12 +150,12 @@ test("it parses all o's", t => {
   t.deepEqual(parse4, makeCountingNumberForm(4));
   t.deepEqual(parse5, makeCountingNumberForm(5));
 });
-test('it parses [<o>] : condensed J ', t => {
+test('it parses [<o>] : condensed J ', (t: any) => {
   const parse = JamesAlgebraParser.parse("[<o>]");
   let unwrap = unwrapSingletonForm(parse);
   t.deepEqual(unwrap, makeJForm());
 });
-test('it parses (<[oo]>] : condensed 1/2', t => {
+test('it parses (<[oo]>] : condensed 1/2', (t: any) => {
   const parse = JamesAlgebraParser.parse("(<[oo]>)");
   let unwrap = unwrapSingletonForm(parse);
   t.deepEqual(
@@ -170,7 +170,7 @@ test('it parses (<[oo]>] : condensed 1/2', t => {
     ])
   );
 });
-test('it parses ([oo] <[ooo]>) : 2/3', t => {
+test('it parses ([oo] <[ooo]>) : 2/3', (t: any) => {
   const parse = JamesAlgebraParser.parse("([oo] <[ooo]>)");
   let unwrap = unwrapSingletonForm(parse);
   t.deepEqual(
@@ -190,7 +190,7 @@ test('it parses ([oo] <[ooo]>) : 2/3', t => {
     ])
   );
 });
-test('it parses ([[<o>]] <[oo]>) : J/2', t => {
+test('it parses ([[<o>]] <[oo]>) : J/2', (t: any) => {
   const parse = JamesAlgebraParser.parse("([[<o>]] <[oo]>)");
   let unwrap = unwrapSingletonForm(parse);
   t.deepEqual(
@@ -207,7 +207,7 @@ test('it parses ([[<o>]] <[oo]>) : J/2', t => {
   );
 });
 
-test('it parses (([[<o>]] <[oo]>)) : #^{J/2} = i', t => {
+test('it parses (([[<o>]] <[oo]>)) : #^{J/2} = i', (t: any) => {
   const parse = JamesAlgebraParser.parse("(([[<o>]] <[oo]>))");
   let unwrap = unwrapSingletonForm(parse);
   t.deepEqual(
@@ -226,7 +226,7 @@ test('it parses (([[<o>]] <[oo]>)) : #^{J/2} = i', t => {
   );
 });
 
-test("it parses literal J's", t => {
+test("it parses literal J's", (t: any) => {
   const parseJ = JamesAlgebraParser.parse("J");
   const parseHalfJ = JamesAlgebraParser.parse("( [J] <[oo]> )");
   const parseJSelfOcclusion = JamesAlgebraParser.parse("J ([J] J)")
@@ -270,7 +270,7 @@ test("it parses literal J's", t => {
 // let parsediLine2 = parser.parse("(([J] <[2]>))");
 // let parsediLine3 = parser.parse("(J/2)");
 
-test("basic parse then render works as expected", t => {
+test("basic parse then render works as expected", (t: any) => {
   const input = "(<[()()]>)";
   const parse = JamesAlgebraParser.parse(input);
   const unwrap = unwrapSingletonForm(parse);
@@ -289,7 +289,7 @@ test("basic parse then render works as expected", t => {
 })
 
 
-test("parse then render works as expected", t => {
+test("parse then render works as expected", (t: any) => {
   const input = "([()()][()()()])";
   const parse = JamesAlgebraParser.parse(input);
   const unwrap = unwrapSingletonForm(parse);
