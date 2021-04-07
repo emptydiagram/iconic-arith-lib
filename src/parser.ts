@@ -1,4 +1,4 @@
-import { JamesAlgebraContainer, JamesAlgebraForm, makeRootedForm } from ".";
+import { JamesAlgebraContainer, JamesAlgebraForm, makeRootedForm, makeUnitForm } from ".";
 
 export function containerSymbolToEnum(sym: string) : JamesAlgebraContainer | undefined {
   return ["[", "]"].includes(sym)
@@ -94,14 +94,16 @@ export class JamesAlgebraParserStack {
 
 }
 
+const openContainerSymbols = ["[", "(", "<"];
+const containerSymbols = ["[", "]", "(", ")", "<", ">"];
+
 export class JamesAlgebraParser {
   static parse(text: string) : JamesAlgebraForm {
     let parserStack = new JamesAlgebraParserStack();
     let inputText = text.trim();
-    const openContainerSymbols = ["[", "(", "<"];
-    const containerSymbols = ["[", "]", "(", ")", "<", ">"];
     let forms: JamesAlgebraForm[] = []
     while (inputText.length > 0) {
+      // if it's an 'o', make a unit form and push into form queue
       // if it's open, push onto stack
       // if it's close and matches open on top of stack
       //   let result = wrap queue contents in container
@@ -114,6 +116,15 @@ export class JamesAlgebraParser {
 
       const firstChar = inputText.charAt(0);
 
+      if (firstChar === 'o') {
+        if (parserStack.isEmpty()) {
+          forms.push(makeUnitForm());
+        } else {
+          parserStack.addToTopQueue(makeUnitForm());
+        }
+        inputText = inputText.substring(1).trim();
+        continue;
+      }
       if (!containerSymbols.includes(firstChar)) {
         throw new Error(`Unrecognized char: ${firstChar}`);
       }
