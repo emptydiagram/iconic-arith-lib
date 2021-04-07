@@ -5,7 +5,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "ava",
+    "test": "ava --verbose",
     "build": "tsc"
   },
   "author": "",
@@ -24,8 +24,7 @@
     ],
     "typescript": {
       "extensions": [
-        "ts",
-        "tsx"
+        "ts"
       ],
       "rewritePaths": {
         "src/": "lib/"

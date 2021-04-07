@@ -16,7 +16,7 @@ import {
   makeImplicitContainerForm,
   makeJForm,
 } from './index';
-import { JamesAlgebraParser } from './parser';
+import { JamesAlgebraParser } from './parse-render';
 
 
 // TODO: find good name for this. an "implicit-view" form?
@@ -42,7 +42,7 @@ test('it parses void', t => {
   t.deepEqual(JamesAlgebraParser.parse("  "), v);
   t.deepEqual(JamesAlgebraParser.parse("   "), v);
 });
-test('it parses ()  : 1)', t => {
+test('it parses ()  : 1', t => {
   const parse = JamesAlgebraParser.parse("()");
   let unwrap = unwrapSingletonForm(parse);
   t.deepEqual(unwrap, makeUnitForm());
