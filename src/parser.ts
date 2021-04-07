@@ -1,4 +1,4 @@
-import { JamesAlgebraContainer, JamesAlgebraForm, makeRootedForm, makeUnitForm } from ".";
+import { JamesAlgebraContainer, JamesAlgebraForm, makeJForm, makeRootedForm, makeUnitForm } from ".";
 
 export function containerSymbolToEnum(sym: string) : JamesAlgebraContainer | undefined {
   return ["[", "]"].includes(sym)
@@ -103,7 +103,7 @@ export class JamesAlgebraParser {
     let inputText = text.trim();
     let forms: JamesAlgebraForm[] = []
     while (inputText.length > 0) {
-      // if it's an 'o', make a unit form and push into form queue
+      // if it's an 'o' or 'J', make a unit/J form and push into form queue
       // if it's open, push onto stack
       // if it's close and matches open on top of stack
       //   let result = wrap queue contents in container
@@ -121,6 +121,15 @@ export class JamesAlgebraParser {
           forms.push(makeUnitForm());
         } else {
           parserStack.addToTopQueue(makeUnitForm());
+        }
+        inputText = inputText.substring(1).trim();
+        continue;
+      }
+      if (firstChar === 'J') {
+        if (parserStack.isEmpty()) {
+          forms.push(makeJForm());
+        } else {
+          parserStack.addToTopQueue(makeJForm());
         }
         inputText = inputText.substring(1).trim();
         continue;

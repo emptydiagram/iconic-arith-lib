@@ -209,6 +209,30 @@ test('it parses (([[<o>]] <[oo]>)) : #^{J/2} = i', t => {
   );
 });
 
+test("it parses literal J's", t => {
+  const parseJ = JamesAlgebraParser.parse("J");
+  const parseHalfJ = JamesAlgebraParser.parse("( [J] <[oo]> )");
+  let unwrapJ = unwrapSingletonForm(parseJ);
+  let unwrapHalfJ = unwrapSingletonForm(parseHalfJ);
+
+  t.deepEqual(
+    unwrapJ,
+    makeJForm()
+  );
+  t.deepEqual(
+    unwrapHalfJ,
+    round([
+      square([makeJForm()]),
+      angle([
+        square([
+          unit(), unit()
+        ])
+      ])
+    ])
+  );
+
+});
+
 function round(children: Array<JamesAlgebraForm>) {
   return makeRoundContainerForm(children);
 }
