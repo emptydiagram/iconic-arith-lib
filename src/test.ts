@@ -229,6 +229,7 @@ test('it parses (([[<o>]] <[oo]>)) : #^{J/2} = i', t => {
 test("it parses literal J's", t => {
   const parseJ = JamesAlgebraParser.parse("J");
   const parseHalfJ = JamesAlgebraParser.parse("( [J] <[oo]> )");
+  const parseJSelfOcclusion = JamesAlgebraParser.parse("J ([J] J)")
   let unwrapJ = unwrapSingletonForm(parseJ);
   let unwrapHalfJ = unwrapSingletonForm(parseHalfJ);
 
@@ -247,12 +248,23 @@ test("it parses literal J's", t => {
       ])
     ])
   );
+  t.deepEqual(
+    parseJSelfOcclusion,
+    makeImplicitContainerForm([
+      makeJForm(),
+      round([
+        square([
+          makeJForm()
+        ]),
+        makeJForm(),
+      ])
+    ])
+  );
 
 });
 
 // TODO: implement functionality, write tests for:
 // let parsedJRefl = parser.parse("A ([A] J)");
-// let parsedJSelfOccl = parser.parse("J ([J] J)");
 // let parsed2div3Numerals = parser.parse("([2] <[3]>)");
 // let parsediLine1 = parser.parse("(([[<o>]] <[oo]>))");
 // let parsediLine2 = parser.parse("(([J] <[2]>))");
