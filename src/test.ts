@@ -250,41 +250,49 @@ test("it parses literal J's", t => {
 
 });
 
-  test("basic parse then render works as expected", t => {
-    const input = "(<[()()]>)";
-    const parse = JamesAlgebraParser.parse(input);
-    const unwrap = unwrapSingletonForm(parse);
-    const oneHalf =
-      round([
-        angle([
-          square([
-            unit(), unit()
-          ])
-        ])
-      ]);
+// TODO: implement functionality, write tests for:
+// let parsedJRefl = parser.parse("A ([A] J)");
+// let parsedJSelfOccl = parser.parse("J ([J] J)");
+// let parsed2div3Numerals = parser.parse("([2] <[3]>)");
+// let parsediLine1 = parser.parse("(([[<o>]] <[oo]>))");
+// let parsediLine2 = parser.parse("(([J] <[2]>))");
+// let parsediLine3 = parser.parse("(J/2)");
 
-    t.deepEqual(unwrap, oneHalf)
-    let rendered = JamesAlgebraFormRenderer.renderToString(unwrap!);
-    t.is(rendered.replace(/\s/g, ''), input.replace(/\s/g, ''));
-  })
-
-
-  test("parse then render works as expected", t => {
-    const input = "([()()][()()()])";
-    const parse = JamesAlgebraParser.parse(input);
-    const unwrap = unwrapSingletonForm(parse);
-    const mult2x3 =
-      round([
+test("basic parse then render works as expected", t => {
+  const input = "(<[()()]>)";
+  const parse = JamesAlgebraParser.parse(input);
+  const unwrap = unwrapSingletonForm(parse);
+  const oneHalf =
+    round([
+      angle([
         square([
           unit(), unit()
-        ]),
-        square([
-          unit(), unit(), unit()
         ])
-      ]);
+      ])
+    ]);
 
-    t.deepEqual(unwrap, mult2x3)
-    let rendered = JamesAlgebraFormRenderer.renderToString(unwrap!);
-    t.is(rendered.replace(/\s/g, ''), input.replace(/\s/g, ''));
+  t.deepEqual(unwrap, oneHalf)
+  let rendered = JamesAlgebraFormRenderer.renderToString(unwrap!);
+  t.is(rendered.replace(/\s/g, ''), input.replace(/\s/g, ''));
+})
 
-  })
+
+test("parse then render works as expected", t => {
+  const input = "([()()][()()()])";
+  const parse = JamesAlgebraParser.parse(input);
+  const unwrap = unwrapSingletonForm(parse);
+  const mult2x3 =
+    round([
+      square([
+        unit(), unit()
+      ]),
+      square([
+        unit(), unit(), unit()
+      ])
+    ]);
+
+  t.deepEqual(unwrap, mult2x3)
+  let rendered = JamesAlgebraFormRenderer.renderToString(unwrap!);
+  t.is(rendered.replace(/\s/g, ''), input.replace(/\s/g, ''));
+
+})
