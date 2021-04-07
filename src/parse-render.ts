@@ -34,7 +34,7 @@ interface JamesAlgebraParserStackInfo {
   queue: Array<JamesAlgebraForm>;
 }
 
-export class JamesAlgebraParserStack {
+class JamesAlgebraParserStack {
   containerStack: Array<JamesAlgebraContainer> = [];
   queueStack: Array<Array<JamesAlgebraForm>> = [];
 
