@@ -1,7 +1,3 @@
-export function hello(): string {
-  return "hello, world";
-}
-
 export enum JamesAlgebraContainer {
   Round = "Round",
   Square = "Square",
@@ -101,6 +97,7 @@ export function makeCountingNumberForm(n: number): JamesAlgebraContainerForm{
   return makeImplicitContainerForm(units);
 }
 
+// FIXME: doesn't work where multiplicand itself is a collection of forms (2 x 3)
 export function makeMultForm(multiplicands: Array<JamesAlgebraForm>) : JamesAlgebraContainerForm {
   return makeRoundContainerForm(
     multiplicands.map(form => makeSquareContainerForm([form])));
