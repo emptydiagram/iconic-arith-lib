@@ -1,4 +1,4 @@
-import { JamesAlgebraContainer, JamesAlgebraForm, makeJForm, makeRootedForm, makeUnitForm } from ".";
+import { JamesAlgebraContainer, JamesAlgebraForm, makeJForm, makeRootedForm, makeUnitForm } from "./index";
 
 export function containerSymbolToEnum(sym: string) : JamesAlgebraContainer | undefined {
   return ["[", "]"].includes(sym)
