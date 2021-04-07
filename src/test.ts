@@ -16,7 +16,7 @@ import {
   makeImplicitContainerForm,
   makeJForm,
 } from './index';
-import { JamesAlgebraParser } from './parse-render';
+import { JamesAlgebraFormRenderer, JamesAlgebraParser } from './parse-render';
 
 
 // TODO: find good name for this. an "implicit-view" form?
@@ -34,6 +34,23 @@ function unwrapSingletonForm(form: JamesAlgebraForm) : JamesAlgebraForm | undefi
   }
   return form.children[0];
 }
+
+function round(children: Array<JamesAlgebraForm>) {
+  return makeRoundContainerForm(children);
+}
+
+function square(children: Array<JamesAlgebraForm>) {
+  return makeSquareContainerForm(children);
+}
+
+function angle(children: Array<JamesAlgebraForm>) {
+  return makeAngleContainerForm(children);
+}
+
+function unit() {
+  return makeUnitForm();
+}
+
 
 test('it parses void', t => {
   let v = makeVoidForm();
@@ -233,18 +250,41 @@ test("it parses literal J's", t => {
 
 });
 
-function round(children: Array<JamesAlgebraForm>) {
-  return makeRoundContainerForm(children);
-}
+  test("basic parse then render works as expected", t => {
+    const input = "(<[()()]>)";
+    const parse = JamesAlgebraParser.parse(input);
+    const unwrap = unwrapSingletonForm(parse);
+    const oneHalf =
+      round([
+        angle([
+          square([
+            unit(), unit()
+          ])
+        ])
+      ]);
 
-function square(children: Array<JamesAlgebraForm>) {
-  return makeSquareContainerForm(children);
-}
+    t.deepEqual(unwrap, oneHalf)
+    let rendered = JamesAlgebraFormRenderer.renderToString(unwrap!);
+    t.is(rendered.replace(/\s/g, ''), input.replace(/\s/g, ''));
+  })
 
-function angle(children: Array<JamesAlgebraForm>) {
-  return makeAngleContainerForm(children);
-}
 
-function unit() {
-  return makeUnitForm();
-}
+  test("parse then render works as expected", t => {
+    const input = "([()()][()()()])";
+    const parse = JamesAlgebraParser.parse(input);
+    const unwrap = unwrapSingletonForm(parse);
+    const mult2x3 =
+      round([
+        square([
+          unit(), unit()
+        ]),
+        square([
+          unit(), unit(), unit()
+        ])
+      ]);
+
+    t.deepEqual(unwrap, mult2x3)
+    let rendered = JamesAlgebraFormRenderer.renderToString(unwrap!);
+    t.is(rendered.replace(/\s/g, ''), input.replace(/\s/g, ''));
+
+  })

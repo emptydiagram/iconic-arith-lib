@@ -173,3 +173,44 @@ export class JamesAlgebraParser {
   }
 
 }
+
+
+export class JamesAlgebraFormRenderer {
+  static renderToString(f: JamesAlgebraForm): string {
+    let s: string = "";
+    let startSymbol = "";
+    let endSymbol = "";
+    if (f.formType == "container") {
+      if (f.root) {
+        switch (f.root) {
+          case JamesAlgebraContainer.Round:
+            startSymbol = "(";
+            endSymbol = ")";
+            break;
+          case JamesAlgebraContainer.Square:
+            startSymbol = "[";
+            endSymbol = "]";
+            break;
+          case JamesAlgebraContainer.Angle:
+            startSymbol = "<";
+            endSymbol = ">";
+            break;
+        }
+      }
+      s = s + startSymbol;
+      if (f.children.length > 0) {
+        for(var i = 0; i < f.children.length; i++) {
+          s = s + this.renderToString(f.children[i]);
+        }
+      } else {
+        s = s + " ";
+      }
+      s = s + endSymbol;
+    } else {
+      // variable
+      s = s + f.name;
+    }
+    return s;
+  }
+
+}
