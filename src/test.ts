@@ -320,14 +320,70 @@ test("it parses literal variables", (t: any) => {
   )
 });
 
+test("it parses numerals 2-9", (t: any) => {
+  const parses = [
+    0,
+    1,
+    JamesAlgebraParser.parse("2"),
+    JamesAlgebraParser.parse("3"),
+    JamesAlgebraParser.parse("4"),
+    JamesAlgebraParser.parse("5"),
+    JamesAlgebraParser.parse("6"),
+    JamesAlgebraParser.parse("7"),
+    JamesAlgebraParser.parse("8"),
+    JamesAlgebraParser.parse("9"),
+  ]
+
+  for (let i = 2; i < 10; i++) {
+    t.deepEqual(
+      parses[i],
+      makeCountingNumberForm(i),
+    )
+  }
+});
+
+test("it parses ([J] <[2]>)", (t: any) => {
+  const parseJOver2 = JamesAlgebraParser.parse("([J] <[2]>)");
+  const unwrapJOver2 = unwrapSingletonForm(parseJOver2);
+  t.deepEqual(
+    unwrapJOver2,
+    round([
+      square([
+        makeJForm()
+      ]),
+      angle([
+        square([
+          makeUnitForm(), makeUnitForm()
+        ])
+      ])
+    ])
+  )
+});
+
+test("it parses 2/3", (t: any) => {
+  const parseJOver2 = JamesAlgebraParser.parse("([2] <[3]>)");
+  const unwrapJOver2 = unwrapSingletonForm(parseJOver2);
+  t.deepEqual(
+    unwrapJOver2,
+    round([
+      square([
+        makeUnitForm(), makeUnitForm()
+      ]),
+      angle([
+        square([
+          makeUnitForm(), makeUnitForm(), makeUnitForm()
+        ])
+      ])
+    ])
+  )
+});
+
 // TODO: implement functionality, write tests for:
-// let parsedJRefl = parser.parse("A ([A] J)");
-// let parsed2div3Numerals = parser.parse("([2] <[3]>)");
 // let parsediLine1 = parser.parse("(([[<o>]] <[oo]>))");
 // let parsediLine2 = parser.parse("(([J] <[2]>))");
 // let parsediLine3 = parser.parse("(J/2)");
 
-test("basic parse then render works as expected", (t: any) => {
+test("it parses and renders 1/2", (t: any) => {
   const input = "(<[()()]>)";
   const parse = JamesAlgebraParser.parse(input);
   const unwrap = unwrapSingletonForm(parse);
@@ -346,7 +402,7 @@ test("basic parse then render works as expected", (t: any) => {
 })
 
 
-test("parse then render works as expected", (t: any) => {
+test("it parses and renders 2x3", (t: any) => {
   const input = "([()()][()()()])";
   const parse = JamesAlgebraParser.parse(input);
   const unwrap = unwrapSingletonForm(parse);

@@ -144,6 +144,18 @@ export class JamesAlgebraParser {
         inputText = inputText.substring(1).trim();
         continue;
       }
+      if (/[2-9]/.test(firstChar)) {
+        let number = parseInt(firstChar);
+        for (let i = 0; i < number; i++) {
+          if (parserStack.isEmpty()) {
+            forms.push(makeUnitForm());
+          } else {
+            parserStack.addToTopQueue(makeUnitForm());
+          }
+        }
+        inputText = inputText.substring(1).trim();
+        continue;
+      }
       if (!containerSymbols.includes(firstChar)) {
         throw new Error(`Unrecognized char: ${firstChar}`);
       }
