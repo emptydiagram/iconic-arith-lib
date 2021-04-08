@@ -5,7 +5,7 @@ export {
 
 export {
   FormSvgPathConfig,
-  FormSvgRoundCircleConfig,
+  FormSvgCircleConfig,
   FormSvgTextConfig,
   FormSvgElementConfig,
   makeRoundPath,

@@ -1,10 +1,12 @@
 
 export interface FormSvgPathConfig {
+  elementType: "path";
   pathData: string;
   color: string;
 }
 
-export interface FormSvgRoundCircleConfig {
+export interface FormSvgCircleConfig {
+  elementType: "circle";
   cx: number;
   cy: number;
   r: number;
@@ -12,6 +14,7 @@ export interface FormSvgRoundCircleConfig {
 }
 
 export interface FormSvgTextConfig {
+  elementType: "text";
   textContent: string;
   x: number;
   y: number;
@@ -19,7 +22,7 @@ export interface FormSvgTextConfig {
 
 export type FormSvgElementConfig =
   | FormSvgPathConfig
-  | FormSvgRoundCircleConfig
+  | FormSvgCircleConfig
   | FormSvgTextConfig
 
 const SQUARE_COLOR = "#d42a20"
@@ -103,7 +106,7 @@ export function makeAnglePath(height: number): FormSvgPathConfig {
   };
 }
 
-export function makeRoundCircle(height: number): FormSvgRoundCircleConfig {
+export function makeRoundCircle(height: number): FormSvgCircleConfig {
   return {
     cx: 0,
     cy: 0,
