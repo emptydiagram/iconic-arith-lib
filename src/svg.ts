@@ -1,3 +1,4 @@
+import { JamesAlgebraContainer, JamesAlgebraForm } from ".";
 
 export interface FormSvgPathConfig {
   elementType: "path";
@@ -28,6 +29,93 @@ export type FormSvgElementConfig =
 const SQUARE_COLOR = "#d42a20"
 const ANGLE_COLOR = "#fac22b"
 const ROUND_COLOR = "#0e638e"
+
+function getUniqueChild(form: JamesAlgebraForm) : JamesAlgebraForm | undefined {
+  if (form.formType !== "container") {
+    throw new Error("Not implemented for non-containers");
+  }
+  if (form.children.length > 1) {
+    throw new Error("Not implemented for forms having a container w/ more than one child");
+  }
+  if (form.children.length === 0) {
+    return;
+  }
+  return form.children[0];
+}
+
+
+export class JamesAlgebraFormSvgRenderer {
+  static render(form: JamesAlgebraForm): FormSvgElementConfig[] {
+    // for the moment, only works on uni-forms (singly-nested forms, of the
+    // shape { { { ... }_3 }_2 }_1
+    // for all i, {}_i in the 3-element set:
+    //    - []
+    //    - ()
+    //    - <>
+    // )
+    let svgConfigs: FormSvgElementConfig[] = []
+    let containerStack : Array<JamesAlgebraContainer> = []
+
+    if (form.formType === "variable") {
+      throw new Error("variable rendering not yet implemented");
+    }
+
+    let currContainer: JamesAlgebraForm = form;
+    // if root is implicit, we'll unwrap the unique child
+    if (!form.root) {
+      if (form.children.length === 0) {
+        // void
+        return [];
+      }
+      if (form.children.length > 1) {
+        throw new Error("> 1 child containers not yet implemented");
+      }
+      currContainer = getUniqueChild(currContainer)!;
+    }
+
+    // traversal into the JA form, pushing containers onto a stack as we go
+    let nextUniqueChild = getUniqueChild(currContainer);
+    while (currContainer.formType === "container" && currContainer.root !== undefined
+          && nextUniqueChild !== undefined) {
+      containerStack.push(currContainer.root!);
+      currContainer = nextUniqueChild;
+      nextUniqueChild = getUniqueChild(currContainer);
+    }
+    if (currContainer.formType !== "container") {
+      throw new Error("variable rendering not yet implemented");
+    }
+    if (currContainer.root === undefined) {
+      throw new Error("implicit root containers are not allowed to occur anywhere except root");
+    }
+    containerStack.push(currContainer.root!);
+
+    //  traverse the stack, drawing forms from the innermost to outermost
+    // add result to svgConfigs
+    const START_HEIGHT = 0.6;
+    const D = 0.55;
+    let h = START_HEIGHT;
+
+    while (containerStack.length > 0) {
+      let top = containerStack.pop();
+      let newConfig: FormSvgElementConfig;
+      switch (top) {
+        case JamesAlgebraContainer.Angle:
+          newConfig = makeAnglePath(h);
+          break;
+        case JamesAlgebraContainer.Round:
+          newConfig = makeRoundCircle(h);
+          break;
+        case JamesAlgebraContainer.Square:
+          newConfig = makeSquarePath(h);
+          break;
+      }
+      svgConfigs.push(newConfig!);
+      h = h + D;
+    }
+
+    return svgConfigs;
+  }
+}
 
 /*
   We want circle arc:
@@ -75,6 +163,7 @@ export function makeRoundPath(height: number): FormSvgPathConfig {
   const roundPath = `M ${-C + A} ${-C} A ${R} ${R} 0 0 0 ${-C + A} ${C}
                     L ${C - A} ${C} A ${R} ${R} 0 0 0 ${C - A} ${-C} Z`
   return {
+    elementType: "path",
     pathData: roundPath,
     color: ROUND_COLOR,
   };
@@ -85,6 +174,7 @@ export function makeSquarePath(height: number): FormSvgPathConfig {
   const squarePath = `M ${-C} ${-C} L ${-C} ${C}
                       L  ${C}  ${C} L  ${C} ${-C} Z`;
   return {
+    elementType: "path",
     pathData: squarePath,
     color: SQUARE_COLOR,
   };
@@ -101,6 +191,7 @@ export function makeAnglePath(height: number): FormSvgPathConfig {
       L ${C * 0.5} ${-C * Math.sqrt(3)/2}
       Z`
   return {
+    elementType: "path",
     pathData: anglePath,
     color: ANGLE_COLOR,
   };
@@ -108,6 +199,7 @@ export function makeAnglePath(height: number): FormSvgPathConfig {
 
 export function makeRoundCircle(height: number): FormSvgCircleConfig {
   return {
+    elementType: "circle",
     cx: 0,
     cy: 0,
     r: height/2,
