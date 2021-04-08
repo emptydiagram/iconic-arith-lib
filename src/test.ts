@@ -12,6 +12,7 @@ import {
   makeCountingNumberForm,
   makeRoundContainerForm,
   makeSquareContainerForm,
+  makeVariableForm,
   makeDivByZeroForm,
   makeImplicitContainerForm,
   makeJForm,
@@ -261,6 +262,62 @@ test("it parses literal J's", (t: any) => {
     ])
   );
 
+});
+
+test("it parses literal variables", (t: any) => {
+  const parse1 = JamesAlgebraParser.parse("A <A>");
+  const parse2 = JamesAlgebraParser.parse("(A [B]) ([C] A)");
+  const parse3 = JamesAlgebraParser.parse("A (J [A])");
+  const elements1 = (parse1 as JamesAlgebraContainerForm).children;
+  const elements2 = (parse2 as JamesAlgebraContainerForm).children;
+  const elements3 = (parse3 as JamesAlgebraContainerForm).children;
+
+  t.is(elements1.length, 2)
+  t.deepEqual(
+    elements1[0],
+    makeVariableForm("A")
+  )
+  t.deepEqual(
+    elements1[1],
+    angle([
+      makeVariableForm("A")
+    ])
+  )
+
+  t.is(elements2.length, 2);
+  t.deepEqual(
+    elements2[0],
+    round([
+      makeVariableForm("A"),
+      square([
+        makeVariableForm("B")
+      ])
+    ])
+  )
+  t.deepEqual(
+    elements2[1],
+    round([
+      square([
+        makeVariableForm("C")
+      ]),
+      makeVariableForm("A"),
+    ])
+  )
+
+  t.is(elements3.length, 2);
+  t.deepEqual(
+    elements3[0],
+    makeVariableForm("A")
+  )
+  t.deepEqual(
+    elements3[1],
+    round([
+      makeJForm(),
+      square([
+        makeVariableForm("A")
+      ]),
+    ])
+  )
 });
 
 // TODO: implement functionality, write tests for:

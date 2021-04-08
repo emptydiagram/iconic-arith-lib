@@ -1,4 +1,4 @@
-import { JamesAlgebraContainer, JamesAlgebraForm, makeJForm, makeRootedForm, makeUnitForm } from "./index";
+import { JamesAlgebraContainer, JamesAlgebraForm, makeJForm, makeRootedForm, makeUnitForm, makeVariableForm } from "./index";
 
 export function containerSymbolToEnum(sym: string) : JamesAlgebraContainer | undefined {
   return ["[", "]"].includes(sym)
@@ -130,6 +130,16 @@ export class JamesAlgebraParser {
           forms.push(makeJForm());
         } else {
           parserStack.addToTopQueue(makeJForm());
+        }
+        inputText = inputText.substring(1).trim();
+        continue;
+      }
+      if (/[A-Z]/.test(firstChar)) {
+        const newForm = makeVariableForm(firstChar);
+        if (parserStack.isEmpty()) {
+          forms.push(newForm);
+        } else {
+          parserStack.addToTopQueue(newForm);
         }
         inputText = inputText.substring(1).trim();
         continue;
