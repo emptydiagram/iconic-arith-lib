@@ -3,6 +3,18 @@ export {
   JamesAlgebraFormRenderer,
 } from './parse-render';
 
+export {
+  FormSvgPathConfig,
+  FormSvgRoundCircleConfig,
+  FormSvgTextConfig,
+  FormSvgElementConfig,
+  makeRoundPath,
+  makeSquarePath,
+  makeAnglePath,
+  makeRoundCircle,
+} from './svg';
+
+
 export enum JamesAlgebraContainer {
   Round = "Round",
   Square = "Square",
