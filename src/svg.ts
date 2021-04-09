@@ -90,26 +90,40 @@ export function renderToSvg(form: JamesAlgebraForm): FormSvgElementConfig[] {
 
   //  traverse the stack, drawing forms from the innermost to outermost
   // add result to svgConfigs
-  const START_HEIGHT = 0.6;
-  const D = 0.55;
+  const START_HEIGHT = 0.4;
+  const D = 0.4;
   let h = START_HEIGHT;
+
+  // 4 (r_s)^2 = pi * r^2
+  // squareMultiple = r_s / r
+  let squareMultiple = 0.88;
+
+  // (3*sqrt(3)/4)*(r_h)^2 = pi * r^2
+  // angleMultiple = r_h / r
+  // let angleMultiple = 1.56;
+  let angleMultiple = 1.03;
+
+  const ALPHA = 1.9;
+  const BETA = 0.05;
+  let geomTerm = BETA;
 
   while (containerStack.length > 0) {
     let top = containerStack.pop();
     let newConfig: FormSvgElementConfig;
     switch (top) {
       case JamesAlgebraContainer.Angle:
-        newConfig = makeAnglePath(h);
+        newConfig = makeAnglePath(h*angleMultiple);
         break;
       case JamesAlgebraContainer.Round:
         newConfig = makeRoundCircle(h);
         break;
       case JamesAlgebraContainer.Square:
-        newConfig = makeSquarePath(h);
+        newConfig = makeSquarePath(h*squareMultiple);
         break;
     }
     svgConfigs.push(newConfig!);
-    h = h + D;
+    h = h + D + geomTerm;
+    geomTerm = geomTerm * ALPHA;
   }
 
   return svgConfigs;
