@@ -44,77 +44,75 @@ function getUniqueChild(form: JamesAlgebraForm) : JamesAlgebraForm | undefined {
 }
 
 
-export class JamesAlgebraFormSvgRenderer {
-  static render(form: JamesAlgebraForm): FormSvgElementConfig[] {
-    // for the moment, only works on uni-forms (singly-nested forms, of the
-    // shape { { { ... }_3 }_2 }_1
-    // for all i, {}_i in the 3-element set:
-    //    - []
-    //    - ()
-    //    - <>
-    // )
-    let svgConfigs: FormSvgElementConfig[] = []
-    let containerStack : Array<JamesAlgebraContainer> = []
+export function renderToSvg(form: JamesAlgebraForm): FormSvgElementConfig[] {
+  // for the moment, only works on uni-forms (singly-nested forms, of the
+  // shape { { { ... }_3 }_2 }_1
+  // for all i, {}_i in the 3-element set:
+  //    - []
+  //    - ()
+  //    - <>
+  // )
+  let svgConfigs: FormSvgElementConfig[] = []
+  let containerStack : Array<JamesAlgebraContainer> = []
 
-    if (form.formType === "variable") {
-      throw new Error("variable rendering not yet implemented");
-    }
-
-    let currContainer: JamesAlgebraForm = form;
-    // if root is implicit, we'll unwrap the unique child
-    if (!form.root) {
-      if (form.children.length === 0) {
-        // void
-        return [];
-      }
-      if (form.children.length > 1) {
-        throw new Error("> 1 child containers not yet implemented");
-      }
-      currContainer = getUniqueChild(currContainer)!;
-    }
-
-    // traversal into the JA form, pushing containers onto a stack as we go
-    let nextUniqueChild = getUniqueChild(currContainer);
-    while (currContainer.formType === "container" && currContainer.root !== undefined
-          && nextUniqueChild !== undefined) {
-      containerStack.push(currContainer.root!);
-      currContainer = nextUniqueChild;
-      nextUniqueChild = getUniqueChild(currContainer);
-    }
-    if (currContainer.formType !== "container") {
-      throw new Error("variable rendering not yet implemented");
-    }
-    if (currContainer.root === undefined) {
-      throw new Error("implicit root containers are not allowed to occur anywhere except root");
-    }
-    containerStack.push(currContainer.root!);
-
-    //  traverse the stack, drawing forms from the innermost to outermost
-    // add result to svgConfigs
-    const START_HEIGHT = 0.6;
-    const D = 0.55;
-    let h = START_HEIGHT;
-
-    while (containerStack.length > 0) {
-      let top = containerStack.pop();
-      let newConfig: FormSvgElementConfig;
-      switch (top) {
-        case JamesAlgebraContainer.Angle:
-          newConfig = makeAnglePath(h);
-          break;
-        case JamesAlgebraContainer.Round:
-          newConfig = makeRoundCircle(h);
-          break;
-        case JamesAlgebraContainer.Square:
-          newConfig = makeSquarePath(h);
-          break;
-      }
-      svgConfigs.push(newConfig!);
-      h = h + D;
-    }
-
-    return svgConfigs;
+  if (form.formType === "variable") {
+    throw new Error("variable rendering not yet implemented");
   }
+
+  let currContainer: JamesAlgebraForm = form;
+  // if root is implicit, we'll unwrap the unique child
+  if (!form.root) {
+    if (form.children.length === 0) {
+      // void
+      return [];
+    }
+    if (form.children.length > 1) {
+      throw new Error("> 1 child containers not yet implemented");
+    }
+    currContainer = getUniqueChild(currContainer)!;
+  }
+
+  // traversal into the JA form, pushing containers onto a stack as we go
+  let nextUniqueChild = getUniqueChild(currContainer);
+  while (currContainer.formType === "container" && currContainer.root !== undefined
+        && nextUniqueChild !== undefined) {
+    containerStack.push(currContainer.root!);
+    currContainer = nextUniqueChild;
+    nextUniqueChild = getUniqueChild(currContainer);
+  }
+  if (currContainer.formType !== "container") {
+    throw new Error("variable rendering not yet implemented");
+  }
+  if (currContainer.root === undefined) {
+    throw new Error("implicit root containers are not allowed to occur anywhere except root");
+  }
+  containerStack.push(currContainer.root!);
+
+  //  traverse the stack, drawing forms from the innermost to outermost
+  // add result to svgConfigs
+  const START_HEIGHT = 0.6;
+  const D = 0.55;
+  let h = START_HEIGHT;
+
+  while (containerStack.length > 0) {
+    let top = containerStack.pop();
+    let newConfig: FormSvgElementConfig;
+    switch (top) {
+      case JamesAlgebraContainer.Angle:
+        newConfig = makeAnglePath(h);
+        break;
+      case JamesAlgebraContainer.Round:
+        newConfig = makeRoundCircle(h);
+        break;
+      case JamesAlgebraContainer.Square:
+        newConfig = makeSquarePath(h);
+        break;
+    }
+    svgConfigs.push(newConfig!);
+    h = h + D;
+  }
+
+  return svgConfigs;
 }
 
 /*

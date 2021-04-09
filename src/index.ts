@@ -8,7 +8,7 @@ export {
   FormSvgCircleConfig,
   FormSvgTextConfig,
   FormSvgElementConfig,
-  JamesAlgebraFormSvgRenderer,
+  renderToSvg,
   makeRoundPath,
   makeSquarePath,
   makeAnglePath,
